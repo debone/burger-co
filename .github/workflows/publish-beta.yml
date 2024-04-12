@@ -22,7 +22,7 @@ jobs:
           lfs: true
       - name: Build
         run: |
-          npm
+          npm install
           npm run build
       - name: Set Version
         run: |
