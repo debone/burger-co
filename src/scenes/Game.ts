@@ -15,22 +15,21 @@ export class Game extends Scene {
 
     this.background = this.add.image(0, 0, RESOURCES.BURGER_SHOP);
     this.background.setOrigin(0, 0);
-    this.background.setScale(0.5);
 
     this.matter.world.setBounds().disableGravity();
 
-    new Patty(this, 570, 290, RESOURCES.BURGER_PATTY);
-    new Patty(this, 570, 285, RESOURCES.BURGER_PATTY);
-    new Patty(this, 620, 290, RESOURCES.BURGER_PATTY);
-    new Patty(this, 620, 285, RESOURCES.BURGER_PATTY);
+    new Patty(this, 720, 480, RESOURCES.BURGER_PATTY);
+    new Patty(this, 720, 475, RESOURCES.BURGER_PATTY);
+    new Patty(this, 770, 480, RESOURCES.BURGER_PATTY);
+    new Patty(this, 770, 475, RESOURCES.BURGER_PATTY);
 
-    new Stacked(this, 430, 650, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 420, 550, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 420, 552, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 420, 551, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 410, 550, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 450, 550, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 450, 550, RESOURCES.BURGER_BOTTOM);
+    new Stacked(this, 360, 750, RESOURCES.BURGER_BOTTOM);
+    new Stacked(this, 420, 700, RESOURCES.BURGER_BOTTOM);
+    new Stacked(this, 420, 752, RESOURCES.BURGER_BOTTOM);
+    new Stacked(this, 420, 751, RESOURCES.BURGER_BOTTOM);
+    new Stacked(this, 410, 750, RESOURCES.BURGER_BOTTOM);
+    new Stacked(this, 400, 750, RESOURCES.BURGER_BOTTOM);
+    new Stacked(this, 400, 750, RESOURCES.BURGER_BOTTOM);
 
     this.matter.add.mouseSpring({ stiffness: 0.1, damping: 1 });
 
@@ -43,6 +42,7 @@ export class Game extends Scene {
 class Stacked extends Phaser.Physics.Matter.Image {
   stacked: Phaser.GameObjects.Image;
   stacked2: Phaser.GameObjects.Image;
+  stacked3: Phaser.GameObjects.Image;
 
   worldWidth: number;
   worldHeight: number;
@@ -71,6 +71,10 @@ class Stacked extends Phaser.Physics.Matter.Image {
     this.setDisplaySize(48, 48);
     this.setDisplayOrigin(55, 82);
 
+    this.stacked3 = this.scene.add.image(x, y, RESOURCES.BURGER_TOP);
+    this.stacked3.setTint(0, 0, 0, 0);
+    this.stacked3.setAlpha(0.2);
+
     scene.add.existing(this);
 
     this.stacked = this.scene.add.image(x, y, RESOURCES.BURGER_PATTY);
@@ -82,6 +86,9 @@ class Stacked extends Phaser.Physics.Matter.Image {
 
     this.stacked2.setDisplaySize(48, 48);
     this.stacked2.setDisplayOrigin(55, 105);
+
+    this.stacked3.setDisplaySize(48, 48);
+    this.stacked3.setDisplayOrigin(55, 55);
 
     this.worldWidth = this.world.walls.right?.position.x!;
     this.worldHeight = this.world.walls.bottom?.position.y!;
@@ -97,6 +104,11 @@ class Stacked extends Phaser.Physics.Matter.Image {
     this.stacked2.setY(this.y);
 
     this.stacked2.displayOriginY = 145 + (this.y / this.worldHeight) * -20;
+
+    this.stacked3.setX(this.x);
+    this.stacked3.setY(this.y);
+
+    this.stacked3.displayOriginX = 50 + (this.x / this.worldWidth - 0.3) * -200;
   }
 }
 

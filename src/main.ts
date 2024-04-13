@@ -14,10 +14,10 @@ import { Debug } from "./scenes/Debug";
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  width: 1140,
-  height: 700,
+  width: 1384,
+  height: 850,
   parent: "game-container",
-  backgroundColor: "#028af8",
+  backgroundColor: "#183f39",
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
