@@ -13,23 +13,32 @@ export class Game extends Scene {
   create() {
     this.camera = this.cameras.main;
 
-    this.background = this.add.image(0, 0, RESOURCES.BURGER_SHOP);
+    this.background = this.add.image(0, 0, RESOURCES.BURGER_SHOP_EMPTY);
     this.background.setOrigin(0, 0);
+
+    this.add
+      .image(268, 500, RESOURCES.BURGER_SHOP_WORKSPACE_SMALL)
+      .setOrigin(0, 0);
+
+    this.add
+      .image(638, 308, RESOURCES.BURGER_SHOP_DRAWER_CLOSED)
+      .setOrigin(0, 0);
 
     this.matter.world.setBounds().disableGravity();
 
+    /*
     new Patty(this, 720, 480, RESOURCES.BURGER_PATTY);
     new Patty(this, 720, 475, RESOURCES.BURGER_PATTY);
     new Patty(this, 770, 480, RESOURCES.BURGER_PATTY);
-    new Patty(this, 770, 475, RESOURCES.BURGER_PATTY);
+    new Patty(this, 770, 475, RESOURCES.BURGER_PATTY);*/
 
-    new Stacked(this, 360, 750, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 420, 700, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 420, 752, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 420, 751, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 410, 750, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 400, 750, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 400, 750, RESOURCES.BURGER_BOTTOM);
+    new Stacked(this, 360, 620, RESOURCES.BURGER_BOTTOM);
+    new Stacked(this, 420, 600, RESOURCES.BURGER_BOTTOM);
+    new Stacked(this, 420, 622, RESOURCES.BURGER_BOTTOM);
+    new Stacked(this, 420, 621, RESOURCES.BURGER_BOTTOM);
+    new Stacked(this, 410, 620, RESOURCES.BURGER_BOTTOM);
+    new Stacked(this, 400, 620, RESOURCES.BURGER_BOTTOM);
+    new Stacked(this, 400, 620, RESOURCES.BURGER_BOTTOM);
 
     this.matter.add.mouseSpring({ stiffness: 0.1, damping: 1 });
 
