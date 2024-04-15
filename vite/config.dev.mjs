@@ -12,7 +12,4 @@ export default defineConfig({
     },
   },
   mode: "development",
-  server: {
-    port: 8080,
-  },
 });

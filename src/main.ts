@@ -5,7 +5,7 @@ import { MainMenu } from "./scenes/MainMenu";
 import { Preloader } from "./scenes/boot/Preloader";
 
 import { Game, Types } from "phaser";
-import PhaserGamebus from "./plugins/gamebus";
+import PhaserGamebus from "./lib/gamebus";
 
 import RexUIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 import { Debug } from "./scenes/Debug";

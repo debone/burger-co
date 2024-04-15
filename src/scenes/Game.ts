@@ -1,5 +1,7 @@
 import { Scene } from "phaser";
 import { RESOURCES } from "../assets";
+import { Dispenser } from "../objects/burgerShop/dispensers/dispenser";
+import { INGREDIENTS } from "../objects/ingredients";
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -20,9 +22,10 @@ export class Game extends Scene {
       .image(268, 500, RESOURCES.BURGER_SHOP_WORKSPACE_SMALL)
       .setOrigin(0, 0);
 
-    this.add
-      .image(638, 308, RESOURCES.BURGER_SHOP_DRAWER_CLOSED)
-      .setOrigin(0, 0);
+    new Dispenser(this, 0, "MEAT_PATTY");
+    new Dispenser(this, 1, "MEAT_PATTY");
+    new Dispenser(this, 2, "MEAT_PATTY");
+    new Dispenser(this, 3, "MEAT_PATTY");
 
     this.matter.world.setBounds().disableGravity();
 
@@ -121,7 +124,7 @@ class Stacked extends Phaser.Physics.Matter.Image {
   }
 }
 
-class Patty extends Phaser.Physics.Matter.Image {
+export class Patty extends Phaser.Physics.Matter.Image {
   stacked: Phaser.GameObjects.Image;
   stacked2: Phaser.GameObjects.Image;
 
@@ -153,6 +156,28 @@ class Patty extends Phaser.Physics.Matter.Image {
     this.setDisplayOrigin(55, 100);
 
     scene.add.existing(this);
+
+    this.setInteractive();
+
+    this.on("pointermove", () => {
+      if (this.scene.input.manager.canvas.style.cursor !== "grabbing") {
+        this.scene.input.manager.canvas.style.cursor = "grab";
+      }
+    });
+
+    this.on("pointerdown", () => {
+      this.scene.input.manager.canvas.style.cursor = "grabbing";
+    });
+
+    this.on("pointerup", () => {
+      this.scene.input.manager.canvas.style.cursor = "auto";
+    });
+
+    this.on("pointerout", () => {
+      if (!this.scene.input.activePointer.isDown) {
+        this.scene.input.manager.canvas.style.cursor = "auto";
+      }
+    });
   }
 
   preUpdate() {}
