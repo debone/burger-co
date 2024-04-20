@@ -1,6 +1,8 @@
 import { Scene } from "phaser";
 import { RESOURCES } from "../../assets";
 
+import statusIconsImg from "../../../public/assets/status-icons.png?url";
+
 export const imageIso = import.meta.glob<{ default: string }>(
   "../../../public/assets/*.png",
   { eager: true }
@@ -46,6 +48,10 @@ export class Preloader extends Scene {
         imageIso[sprite].default.replace("/public", "")
       );
     }
+
+    this.load.spritesheet("status-icons", statusIconsImg, {
+      frameWidth: 64,
+    });
   }
 
   create() {

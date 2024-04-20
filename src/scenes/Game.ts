@@ -2,25 +2,35 @@ import { Scene } from "phaser";
 import { RESOURCES } from "../assets";
 import { Dispenser } from "../objects/burgerShop/dispensers/dispenser";
 import { INGREDIENTS } from "../objects/ingredients";
+import { SmallWorkspace } from "../objects/burgerShop/workspaces/smallWorkspace";
+import PhaserGamebus from "../lib/gamebus";
+import {
+  BurgerPatty,
+  meatPatty,
+} from "../objects/ingredients/meat-patty/meat-patty";
+import { Indicator } from "../objects/indicator/indicator";
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
   msg_text: Phaser.GameObjects.Text;
 
+  declare bus: Phaser.Events.EventEmitter;
+  declare gamebus: PhaserGamebus;
+
   constructor() {
     super("Game");
   }
 
   create() {
+    this.bus = this.gamebus.getBus();
+
     this.camera = this.cameras.main;
 
     this.background = this.add.image(0, 0, RESOURCES.BURGER_SHOP_EMPTY);
     this.background.setOrigin(0, 0);
 
-    this.add
-      .image(268, 500, RESOURCES.BURGER_SHOP_WORKSPACE_SMALL)
-      .setOrigin(0, 0);
+    new SmallWorkspace(this);
 
     new Dispenser(this, 0, "MEAT_PATTY");
     new Dispenser(this, 1, "MEAT_PATTY");
@@ -33,9 +43,20 @@ export class Game extends Scene {
     new Patty(this, 720, 480, RESOURCES.BURGER_PATTY);
     new Patty(this, 720, 475, RESOURCES.BURGER_PATTY);
     new Patty(this, 770, 480, RESOURCES.BURGER_PATTY);
-    new Patty(this, 770, 475, RESOURCES.BURGER_PATTY);*/
+    new Patty(this, 770, 475, RESOURCES.BURGER_PATTY);
 
-    new Stacked(this, 360, 620, RESOURCES.BURGER_BOTTOM);
+    this.matter.world.nextCategory();
+    let a = this.matter.world.nextCategory();
+
+    new Stacked(this, 360, 820, RESOURCES.BURGER_BOTTOM).setCollisionCategory(
+      a
+    );
+
+    new Indicator(this, 360, 280);
+
+    new BurgerPatty(this, 370, 480, RESOURCES.BURGER_PATTY);
+    new Patty(this, 370, 380, RESOURCES.BURGER_PATTY);*/
+
     new Stacked(this, 420, 600, RESOURCES.BURGER_BOTTOM);
     new Stacked(this, 420, 622, RESOURCES.BURGER_BOTTOM);
     new Stacked(this, 420, 621, RESOURCES.BURGER_BOTTOM);
@@ -43,7 +64,19 @@ export class Game extends Scene {
     new Stacked(this, 400, 620, RESOURCES.BURGER_BOTTOM);
     new Stacked(this, 400, 620, RESOURCES.BURGER_BOTTOM);
 
-    this.matter.add.mouseSpring({ stiffness: 0.1, damping: 1 });
+    this.matter.add.mouseSpring({
+      stiffness: 0.1,
+      damping: 1,
+      collisionFilter: {
+        category: 0x0002,
+        mask: 3,
+        group: 0,
+      },
+    });
+
+    this.input.on("pointerup", () => {
+      this.bus.emit("activePointer:up");
+    });
 
     this.input.once("pointerdown", () => {
       //      this.scene.start("GameOver");
@@ -123,6 +156,9 @@ class Stacked extends Phaser.Physics.Matter.Image {
     this.stacked3.displayOriginX = 50 + (this.x / this.worldWidth - 0.3) * -200;
   }
 }
+
+/**
+ */
 
 export class Patty extends Phaser.Physics.Matter.Image {
   stacked: Phaser.GameObjects.Image;

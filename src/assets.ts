@@ -2,6 +2,8 @@ export const RESOURCES = {
   BACKGROUND: "bg.png",
   LOGO: "logo.png",
 
+  STATUS_ICONS: "status-icons",
+
   BURGER_BOTTOM: "burger-bottom-bun.png",
   BURGER_TOP: "burger-top-bun.png",
   BURGER_PATTY: "burger-patty.png",

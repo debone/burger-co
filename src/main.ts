@@ -24,9 +24,6 @@ const config: Types.Core.GameConfig = {
   },
   physics: {
     default: "matter",
-    matter: {
-      debug: false,
-    },
   },
   plugins: {
     global: [
@@ -47,5 +44,12 @@ const config: Types.Core.GameConfig = {
   },
   scene: [Boot, Preloader, MainMenu, MainGame, GameOver, Debug],
 };
+
+if (import.meta.env.DEV) {
+  {
+    config.physics!.matter = {};
+    config.physics!.matter.debug = false;
+  }
+}
 
 export default new Game(config);

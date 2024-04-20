@@ -1,7 +1,6 @@
 import { getNextDispenserPosition } from ".";
 import { RESOURCES } from "../../../assets";
 import { Vector2 } from "../../../common/helpers";
-import { Patty } from "../../../scenes/Game";
 import { INGREDIENTS } from "../../ingredients";
 
 export class Dispenser extends Phaser.GameObjects.Sprite {
@@ -9,6 +8,7 @@ export class Dispenser extends Phaser.GameObjects.Sprite {
   index: number;
   ingredientName: Phaser.GameObjects.Text;
   ingredientSprite: Phaser.GameObjects.Image;
+  ingredientObject: Phaser.Physics.Matter.Image;
 
   constructor(scene: Phaser.Scene, index: number, ingredientKey: INGREDIENTS) {
     const pos = getNextDispenserPosition(index);
@@ -74,8 +74,13 @@ export class Dispenser extends Phaser.GameObjects.Sprite {
       ({ downX, downY }: { downX: number; downY: number }) => {
         if (downY < pos.y + 130) return;
         //okay.. this.scene.events.emit("dispenserClicked", ingredientKey);
-        // new Patty(this, 720, 480, RESOURCES.BURGER_PATTY);
-        new Patty(this.scene, downX, downY, ingredient.sprite);
+
+        this.ingredientObject = new ingredient.object(
+          this.scene,
+          downX,
+          downY,
+          ingredient.sprite
+        );
       }
     );
   }
