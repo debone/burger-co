@@ -48,7 +48,7 @@ const config: Types.Core.GameConfig = {
 if (import.meta.env.DEV) {
   {
     config.physics!.matter = {};
-    config.physics!.matter.debug = false;
+    config.physics!.matter.debug = true;
   }
 }
 

@@ -1,14 +1,16 @@
 import { Scene } from "phaser";
-import { RESOURCES } from "../assets";
-import { Dispenser } from "../objects/burgerShop/dispensers/dispenser";
-import { INGREDIENTS } from "../objects/ingredients";
-import { SmallWorkspace } from "../objects/burgerShop/workspaces/smallWorkspace";
+
+import RexUIPlugin from "../lib/rexui";
 import PhaserGamebus from "../lib/gamebus";
+
+import { RESOURCES } from "../assets";
+
+import { Dispenser } from "../objects/burgerShop/dispensers/dispenser";
+import { SmallWorkspace } from "../objects/burgerShop/workspaces/smallWorkspace";
 import {
-  BurgerPatty,
-  meatPatty,
-} from "../objects/ingredients/meat-patty/meat-patty";
-import { Indicator } from "../objects/indicator/indicator";
+  IngredientsStack,
+  InteractiveIngredientsStack,
+} from "../objects/ingredientsStack/ingredientsStack";
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -17,6 +19,7 @@ export class Game extends Scene {
 
   declare bus: Phaser.Events.EventEmitter;
   declare gamebus: PhaserGamebus;
+  declare rexUI: RexUIPlugin;
 
   constructor() {
     super("Game");
@@ -56,6 +59,22 @@ export class Game extends Scene {
 
     new BurgerPatty(this, 370, 480, RESOURCES.BURGER_PATTY);
     new Patty(this, 370, 380, RESOURCES.BURGER_PATTY);*/
+
+    const ing = new IngredientsStack(this, 620, 600);
+
+    ing.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
+    ing.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
+    ing.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
+    ing.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
+    ing.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
+
+    const ing2 = new IngredientsStack(this, 720, 600);
+    ing2.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
+    ing2.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
+    ing2.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
+
+    const ing3 = new InteractiveIngredientsStack(this, 820, 600);
+    ing3.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
 
     new Stacked(this, 420, 600, RESOURCES.BURGER_BOTTOM);
     new Stacked(this, 420, 622, RESOURCES.BURGER_BOTTOM);

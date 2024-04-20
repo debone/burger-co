@@ -1,11 +1,51 @@
 import { BodyType } from "matter";
 import { RESOURCES } from "../../../assets";
 import { Game } from "../../../scenes/Game";
-import { assert } from "../../../common/assert";
-import { Indicator } from "../../indicator/indicator";
+import {
+  QUALITY,
+  QualityIndicator,
+} from "../../ui/quality-indicator/quality-indicator";
+
+export class StackableBurgerPatty extends Phaser.GameObjects.Container {
+  constructor(
+    scene: Game,
+    x: number,
+    y: number,
+    texture: string,
+    options: Phaser.Types.Physics.Matter.MatterBodyConfig = {}
+  ) {
+    super(scene, x, y);
+
+    this.bus = scene.gamebus.getBus();
+
+    const patty = scene.make.image({ key: texture });
+    patty.setDisplaySize(55, 65);
+    patty.setDisplayOrigin(55, 100);
+    patty.setTint(meatPatty.tint[QUALITY.RAW]);
+    this.add(patty);
+    this.patty = patty;
+    this.cookedScore = 0;
+
+    const status = new QualityIndicator(scene, 0, 18);
+    this.add(status);
+    this.status = status;
+
+    this.physics.setOnCollide((...a) => {
+      console.log(a);
+    });
+  }
+
+  cookTick() {
+    this.cookedScore += 1;
+    if (this.cookedScore > meatPatty.cookStepTime) {
+      this.cook();
+    }
+  }
+  cook() {}
+}
 
 export class BurgerPatty extends Phaser.GameObjects.Container {
-  declare bus: Phaser.Events.EventEmitter;
+  bus: Phaser.Events.EventEmitter;
 
   cookedScore: number;
   dragState: "down" | "dragging";
@@ -14,7 +54,7 @@ export class BurgerPatty extends Phaser.GameObjects.Container {
     | Phaser.Physics.Matter.Image
     | Phaser.GameObjects.GameObject;
 
-  status: Indicator;
+  status: QualityIndicator;
   patty: Phaser.GameObjects.Image;
 
   constructor(
@@ -32,15 +72,14 @@ export class BurgerPatty extends Phaser.GameObjects.Container {
     const patty = scene.make.image({ key: texture });
     patty.setDisplaySize(55, 65);
     patty.setDisplayOrigin(55, 100);
+    patty.setTint(meatPatty.tint[QUALITY.RAW]);
     this.add(patty);
     this.patty = patty;
     this.cookedScore = 0;
 
-    const status = new Indicator(scene, 0, 18);
+    const status = new QualityIndicator(scene, 0, 18);
     this.add(status);
     this.status = status;
-
-    patty.setTint(0xffaaaa);
 
     this.physics = scene.matter.add.gameObject(this, options, true);
 
@@ -76,6 +115,10 @@ export class BurgerPatty extends Phaser.GameObjects.Container {
       if (this.cookedScore > meatPatty.cookStepTime) {
         this.cook();
       }
+    });
+
+    this.physics.setOnCollide((...a) => {
+      console.log(a);
     });
 
     patty.on("pointermove", () => {
@@ -116,23 +159,7 @@ export class BurgerPatty extends Phaser.GameObjects.Container {
     const nextStatus = this.status.increment();
     this.cookedScore = 0;
     console.log("Cooked", nextStatus);
-
-    switch (nextStatus) {
-      case 1:
-        this.patty.setTint(0xff8888);
-        break;
-      case 2:
-        this.patty.setTint(0xffccaa);
-        break;
-      case 3:
-        this.patty.setTint(0xffeeaa);
-        break;
-      case 4:
-        this.patty.setTint(0x333333);
-        break;
-      default:
-        assert(false, "Invalid status");
-    }
+    this.patty.setTint(meatPatty.tint[nextStatus]);
   }
 
   dragStart() {
@@ -168,10 +195,18 @@ export const meatPatty: {
   dispenserOffset: { x: number; y: number };
   cookStepTime: number;
   object: typeof BurgerPatty;
+  tint: { [key in QUALITY]: number };
 } = {
   name: "Meat Patty",
   sprite: RESOURCES.BURGER_PATTY,
   dispenserOffset: { x: -35, y: 160 },
   cookStepTime: 250,
   object: BurgerPatty,
+  tint: {
+    [QUALITY.RAW]: 0xff33aa,
+    [QUALITY.LUKEWARM]: 0xff99dd,
+    [QUALITY.COOKED]: 0xfbb954,
+    [QUALITY.OVERCOOKED]: 0x9e3344,
+    [QUALITY.BURNT]: 0x333333,
+  },
 };

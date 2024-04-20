@@ -5,3 +5,4 @@ export const INGREDIENTS = {
 };
 
 export type INGREDIENTS = keyof typeof INGREDIENTS;
+export type INGREDIENTS_REPRESENTATION = (typeof INGREDIENTS)[INGREDIENTS];
