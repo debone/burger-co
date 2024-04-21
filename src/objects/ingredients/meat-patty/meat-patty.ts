@@ -1,4 +1,5 @@
 import { BodyType } from "matter";
+import { INGREDIENTS, INGREDIENTS_REPRESENTATION, Ingredients } from "..";
 import { RESOURCES } from "../../../assets";
 import { Game } from "../../../scenes/Game";
 import {
@@ -6,33 +7,48 @@ import {
   QualityIndicator,
 } from "../../ui/quality-indicator/quality-indicator";
 
-export class StackableBurgerPatty extends Phaser.GameObjects.Container {
+export class StackableBurgerPatty
+  extends Phaser.GameObjects.Container
+  implements Ingredients
+{
+  bus: Phaser.Events.EventEmitter;
+
+  qualityIndicator: QualityIndicator;
+  quality: QUALITY;
+  cookedScore: number;
+  ingredientImage: Phaser.GameObjects.Image;
+  ingredient: INGREDIENTS_REPRESENTATION;
+
   constructor(
     scene: Game,
     x: number,
     y: number,
-    texture: string,
-    options: Phaser.Types.Physics.Matter.MatterBodyConfig = {}
+    quality: QUALITY = QUALITY.RAW
   ) {
     super(scene, x, y);
 
+    this.ingredient = INGREDIENTS.MEAT_PATTY;
+    this.quality = quality;
+
     this.bus = scene.gamebus.getBus();
 
-    const patty = scene.make.image({ key: texture });
+    const patty = scene.make.image({ key: meatPatty.sprite });
     patty.setDisplaySize(55, 65);
     patty.setDisplayOrigin(55, 100);
-    patty.setTint(meatPatty.tint[QUALITY.RAW]);
+    patty.setTint(meatPatty.tint[this.quality]);
     this.add(patty);
-    this.patty = patty;
+    this.ingredientImage = patty;
     this.cookedScore = 0;
 
-    const status = new QualityIndicator(scene, 0, 18);
-    this.add(status);
-    this.status = status;
+    const qualityIndicator = new QualityIndicator(scene, 0, 18, this.quality);
+    qualityIndicator.setVisible(false);
+    this.add(qualityIndicator);
+    this.qualityIndicator = qualityIndicator;
+  }
 
-    this.physics.setOnCollide((...a) => {
-      console.log(a);
-    });
+  setQuality(quality: QUALITY) {
+    this.quality = quality;
+    this.ingredientImage.setTint(meatPatty.tint[quality]);
   }
 
   cookTick() {
@@ -41,7 +57,12 @@ export class StackableBurgerPatty extends Phaser.GameObjects.Container {
       this.cook();
     }
   }
-  cook() {}
+  cook() {
+    const nextStatus = this.qualityIndicator.increment();
+    this.cookedScore = 0;
+    console.log("Cooked", nextStatus);
+    this.setQuality(nextStatus);
+  }
 }
 
 export class BurgerPatty extends Phaser.GameObjects.Container {
@@ -189,19 +210,12 @@ export class BurgerPatty extends Phaser.GameObjects.Container {
   }
 }
 
-export const meatPatty: {
-  name: string;
-  sprite: string;
-  dispenserOffset: { x: number; y: number };
-  cookStepTime: number;
-  object: typeof BurgerPatty;
-  tint: { [key in QUALITY]: number };
-} = {
+export const meatPatty = {
   name: "Meat Patty",
   sprite: RESOURCES.BURGER_PATTY,
   dispenserOffset: { x: -35, y: 160 },
   cookStepTime: 250,
-  object: BurgerPatty,
+  object: StackableBurgerPatty,
   tint: {
     [QUALITY.RAW]: 0xff33aa,
     [QUALITY.LUKEWARM]: 0xff99dd,

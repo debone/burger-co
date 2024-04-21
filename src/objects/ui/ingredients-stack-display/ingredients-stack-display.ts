@@ -5,7 +5,7 @@ import {
   QualityIndicator,
 } from "../quality-indicator/quality-indicator";
 
-class IngredientsStackDisplay {
+export class IngredientsStackDisplay {
   constructor(scene: Game) {
     const menu = scene.rexUI.add.menu({
       x: 400,

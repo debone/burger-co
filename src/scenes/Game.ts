@@ -11,6 +11,8 @@ import {
   IngredientsStack,
   InteractiveIngredientsStack,
 } from "../objects/ingredientsStack/ingredientsStack";
+import { StackableBurgerPatty } from "../objects/ingredients/meat-patty/meat-patty";
+import { QUALITY } from "../objects/ui/quality-indicator/quality-indicator";
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -74,7 +76,11 @@ export class Game extends Scene {
     ing2.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
 
     const ing3 = new InteractiveIngredientsStack(this, 820, 600);
-    ing3.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
+    ing3.addIngredient(new StackableBurgerPatty(this, 0, 0));
+    ing3.addIngredient(new StackableBurgerPatty(this, 0, 0));
+
+    const ing4 = new InteractiveIngredientsStack(this, 860, 600);
+    ing4.addIngredient(new StackableBurgerPatty(this, 0, 0, QUALITY.BURNT));
 
     new Stacked(this, 420, 600, RESOURCES.BURGER_BOTTOM);
     new Stacked(this, 420, 622, RESOURCES.BURGER_BOTTOM);
@@ -84,7 +90,7 @@ export class Game extends Scene {
     new Stacked(this, 400, 620, RESOURCES.BURGER_BOTTOM);
 
     this.matter.add.mouseSpring({
-      stiffness: 0.1,
+      stiffness: 0.2,
       damping: 1,
       collisionFilter: {
         category: 0x0002,
