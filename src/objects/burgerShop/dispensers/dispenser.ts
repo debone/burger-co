@@ -2,6 +2,8 @@ import { getNextDispenserPosition } from ".";
 import { RESOURCES } from "../../../assets";
 import { Vector2 } from "../../../common/helpers";
 import { INGREDIENTS } from "../../ingredients";
+import { IngredientsStack } from "../../ingredientsStack/ingredientsStack";
+import { QUALITY } from "../../ui/quality-indicator/quality-indicator";
 
 export class Dispenser extends Phaser.GameObjects.Sprite {
   open: boolean;
@@ -74,12 +76,14 @@ export class Dispenser extends Phaser.GameObjects.Sprite {
       ({ downX, downY }: { downX: number; downY: number }) => {
         if (downY < pos.y + 130) return;
         //okay.. this.scene.events.emit("dispenserClicked", ingredientKey);
+        this.ingredientObject = new IngredientsStack(this.scene, downX, downY);
 
-        this.ingredientObject = new ingredient.object(
-          this.scene,
-          downX,
-          downY,
-          ingredient.sprite
+        this.ingredientObject.dragStart();
+        this.ingredientObject.dragEnd();
+        this.ingredientObject.dragStart();
+
+        this.ingredientObject.addIngredient(
+          new INGREDIENTS[ingredientKey].object(this.scene, 0, 0, QUALITY.RAW)
         );
       }
     );

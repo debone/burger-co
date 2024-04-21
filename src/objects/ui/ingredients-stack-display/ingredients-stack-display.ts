@@ -6,16 +6,17 @@ import {
 } from "../quality-indicator/quality-indicator";
 
 export class IngredientsStackDisplay {
-  constructor(scene: Game) {
+  static create(
+    scene: Game,
+    x: number,
+    y: number,
+    items: { name: string; status: QUALITY }[]
+  ): RexUIPlugin.Menu {
     const menu = scene.rexUI.add.menu({
-      x: 400,
-      y: 300,
+      x,
+      y,
 
-      items: [
-        { name: "AA", status: QUALITY.COOKED },
-        { name: "BB" },
-        { name: "CC" },
-      ],
+      items,
 
       createButtonCallback: (item, index, items) => {
         const label = {
@@ -64,5 +65,9 @@ export class IngredientsStackDisplay {
       .on("button.click", (button: RexUIPlugin.Buttons) => {
         console.log(button);
       });
+
+    menu.depth = -1000;
+
+    return menu;
   }
 }

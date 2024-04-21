@@ -9,9 +9,9 @@ import { Dispenser } from "../objects/burgerShop/dispensers/dispenser";
 import { SmallWorkspace } from "../objects/burgerShop/workspaces/smallWorkspace";
 import {
   IngredientsStack,
-  InteractiveIngredientsStack,
+  IngredientsStack,
 } from "../objects/ingredientsStack/ingredientsStack";
-import { StackableBurgerPatty } from "../objects/ingredients/meat-patty/meat-patty";
+import { BurgerPatty } from "../objects/ingredients/meat-patty/meat-patty";
 import { QUALITY } from "../objects/ui/quality-indicator/quality-indicator";
 
 export class Game extends Scene {
@@ -64,23 +64,39 @@ export class Game extends Scene {
 
     const ing = new IngredientsStack(this, 620, 600);
 
-    ing.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
-    ing.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
-    ing.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
-    ing.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
-    ing.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
+    ing.addIngredient(
+      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
+    );
+    ing.addIngredient(
+      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
+    );
+    ing.addIngredient(
+      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
+    );
+    ing.addIngredient(
+      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
+    );
+    ing.addIngredient(
+      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
+    );
 
     const ing2 = new IngredientsStack(this, 720, 600);
-    ing2.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
-    ing2.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
-    ing2.addIngredient("MEAT_PATTY", Math.floor(Math.random() * 5));
+    ing2.addIngredient(
+      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
+    );
+    ing2.addIngredient(
+      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
+    );
+    ing2.addIngredient(
+      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
+    );
 
-    const ing3 = new InteractiveIngredientsStack(this, 820, 600);
-    ing3.addIngredient(new StackableBurgerPatty(this, 0, 0));
-    ing3.addIngredient(new StackableBurgerPatty(this, 0, 0));
+    const ing3 = new IngredientsStack(this, 820, 600);
+    ing3.addIngredient(new BurgerPatty(this, 0, 0));
+    ing3.addIngredient(new BurgerPatty(this, 0, 0));
 
-    const ing4 = new InteractiveIngredientsStack(this, 860, 600);
-    ing4.addIngredient(new StackableBurgerPatty(this, 0, 0, QUALITY.BURNT));
+    const ing4 = new IngredientsStack(this, 860, 600);
+    ing4.addIngredient(new BurgerPatty(this, 0, 0, QUALITY.BURNT));
 
     new Stacked(this, 420, 600, RESOURCES.BURGER_BOTTOM);
     new Stacked(this, 420, 622, RESOURCES.BURGER_BOTTOM);
