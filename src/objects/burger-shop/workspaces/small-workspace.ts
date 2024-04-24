@@ -68,7 +68,7 @@ export class SmallWorkspace extends Phaser.GameObjects.Image {
       }),
     ];
 
-    console.log("he", this.scene.matter.world.nextCategory());
+    //console.log("he", this.scene.matter.world.nextCategory());
 
     /*
     const workspaceSmallDetector = this.scene.matter.add.rectangle(

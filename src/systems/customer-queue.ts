@@ -11,7 +11,6 @@ export class CustomerQueue extends Phaser.Time.Timeline {
   }
 
   create() {
-    console.log("hello");
     this.tick();
     return this;
   }
@@ -27,10 +26,10 @@ export class CustomerQueue extends Phaser.Time.Timeline {
   }
 
   spawnCustomer() {
-    console.log("Trying creating customer");
-    if (this.customers.size < 5) {
-      console.log("Customer created");
-
+    if (
+      this.customers.size === 0 ||
+      (Math.random() > 0.8 && this.customers.size < 5)
+    ) {
       this.customers.set(
         this.customerId,
         new Bezelbub(
@@ -56,8 +55,7 @@ export class CustomerQueue extends Phaser.Time.Timeline {
     });
   }
 
-  update(time: number, delta: number) {
-    super.update(time, delta);
-    // if (Math.random() > 0.8) console.log(time);
+  deliveredOrder(id: number) {
+    this.customers.get(id)?.delivered();
   }
 }

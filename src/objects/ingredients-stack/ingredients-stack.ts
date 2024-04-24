@@ -1,9 +1,9 @@
 import { BodyType } from "matter";
 import { GameObjects } from "phaser";
+import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin";
 import { MainGame } from "../../scenes/main-game";
-import { INGREDIENTS_OBJECTS } from "../ingredients";
 import { IngredientsStackDisplay } from "../../ui/ingredients-stack-display/ingredients-stack-display";
-import RexUIPlugin from "../../lib/rexui";
+import { INGREDIENTS_OBJECTS } from "../ingredients";
 
 export class IngredientsStack extends Phaser.GameObjects.Container {
   declare scene: MainGame;
@@ -18,7 +18,7 @@ export class IngredientsStack extends Phaser.GameObjects.Container {
 
   shadow: Phaser.GameObjects.Graphics;
 
-  ingredientsStackDisplay: RexUIPlugin.Menu | null;
+  ingredientsStackDisplay: UIPlugin.Menu | null;
 
   constructor(scene: MainGame, x: number, y: number) {
     super(scene, x, y);
@@ -66,15 +66,35 @@ export class IngredientsStack extends Phaser.GameObjects.Container {
       .getMatterBodies()
       .find((body) => body.label === "grill") as BodyType;
 
+    let lowerCounter = this.scene.matter
+      .getMatterBodies()
+      .find((body) => body.label === "lowerCounter") as BodyType;
+
     this.physics.setOnCollideActive((collision) => {
-      if (collision.bodyA !== grill) {
-        return;
+      if (collision.bodyA === grill) {
+        const ingredient = this.getFirst("ingredient");
+        if (ingredient && "cookTick" in ingredient) {
+          ingredient.cookTick();
+        }
       }
 
-      // Emit event for first child
-      const ingredient = this.getFirst("ingredient");
-      if (ingredient && "cookTick" in ingredient) {
-        ingredient.cookTick();
+      if (collision.bodyA === lowerCounter) {
+        const deliver = this.getAll("ingredient")
+          .reverse()
+          .map((ingredient) => ({
+            ingredient: ingredient.ingredient,
+            quality: ingredient.quality,
+          })) as { ingredient: INGREDIENTS_OBJECTS; quality: number }[];
+        console.log("Delivered!", deliver);
+
+        scene.orders.deliverMainOrder(deliver);
+
+        this.destroy();
+        if (this.ingredientsStackDisplay) {
+          this.ingredientsStackDisplay.collapse();
+          this.ingredientsStackDisplay.destroy();
+          this.ingredientsStackDisplay = null;
+        }
       }
     });
 

@@ -1,5 +1,7 @@
+import CircularProgress from "phaser3-rex-plugins/plugins/circularprogress";
 import { Customer } from "..";
 import { RESOURCES } from "../../../assets";
+import { RexCircularProgressPlugin } from "../../../lib/rexui";
 import { MainGame } from "../../../scenes/main-game";
 
 export class Bezelbub extends Phaser.GameObjects.Container implements Customer {
@@ -11,7 +13,9 @@ export class Bezelbub extends Phaser.GameObjects.Container implements Customer {
 
   id: number;
   order: number;
-  state: "moving" | "waiting" | "ordering" | "leaving" = "moving";
+  state: "moving" | "waiting" | "ordering" | "leaving" | "happy" = "moving";
+
+  progressBar: CircularProgress;
 
   constructor(
     id: number,
@@ -25,9 +29,23 @@ export class Bezelbub extends Phaser.GameObjects.Container implements Customer {
     this.id = id;
     this.bezelbub = scene.make.image({ key: RESOURCES.CUSTOMER_BEZELBUB });
 
-    // add rex progress pie
-
     this.add(this.bezelbub);
+
+    this.progressBar = new RexCircularProgressPlugin(
+      scene,
+      0,
+      -100,
+      32,
+      0xff00ff,
+      1,
+      {
+        thickness: 1,
+        anticlockwise: false,
+        valuechangeCallback: function (newValue, oldValue, circularProgress) {},
+      }
+    );
+
+    this.add(this.progressBar);
 
     scene.add.existing(this);
 
@@ -39,9 +57,7 @@ export class Bezelbub extends Phaser.GameObjects.Container implements Customer {
     this.yGoal = goal;
   }
 
-  setGoal() {
-    console.log("Setting goal");
-  }
+  setGoal() {}
 
   protected preUpdate(): void {
     switch (this.state) {
@@ -66,27 +82,50 @@ export class Bezelbub extends Phaser.GameObjects.Container implements Customer {
         this.leave();
         break;
       }
+      case "happy": {
+      }
     }
 
     this.depth = this.y;
   }
 
   tryMakeOrder() {
-    const order = this.scene.orders.requestOrder();
+    const order = this.scene.orders.requestOrder(this.id);
     if (order) {
       this.order = order;
       this.state = "waiting";
     }
   }
 
-  patience: number = 100;
+  delivered(): void {
+    this.state = "happy";
+    this.progressBar.setBarColor(0x00ff00);
+    this.progressBar.setValue(1);
+
+    this.scene.time.addEvent({
+      delay: 3000,
+      callback: () => {
+        this.scene.orders.cancelOrder(this.order);
+        this.scene.customerQueue.dropCustomer(this.id);
+
+        this.state = "leaving";
+      },
+    });
+  }
+
+  maxPatience: number = 5000;
+  patience: number = this.maxPatience;
 
   wait() {
     this.patience -= 1;
 
+    this.progressBar.setValue(this.patience / this.maxPatience);
+
     if (this.patience <= 0) {
       this.scene.orders.cancelOrder(this.order);
       this.scene.customerQueue.dropCustomer(this.id);
+
+      this.getFirst().setTint(0xff7777);
 
       this.state = "leaving";
     }

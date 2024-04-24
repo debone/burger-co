@@ -1,7 +1,7 @@
 import { Scene } from "phaser";
 
 import PhaserGamebus from "../lib/gamebus";
-import RexUIPlugin from "../lib/rexui";
+import { UIPlugin } from "../lib/rexui";
 
 import { RESOURCES } from "../assets";
 
@@ -10,7 +10,7 @@ import { SmallWorkspace } from "../objects/burger-shop/workspaces/small-workspac
 import { IngredientsStack } from "../objects/ingredients-stack/ingredients-stack";
 import { MeatPatty } from "../objects/ingredients/meat-patty/meat-patty";
 import { CustomerQueue } from "../systems/customer-queue";
-import { Orders } from "../systems/orders";
+import { Orders } from "../systems/orders/orders";
 import { QUALITY } from "../ui/quality-indicator/quality-indicator";
 
 export class MainGame extends Scene {
@@ -20,7 +20,7 @@ export class MainGame extends Scene {
 
   declare bus: Phaser.Events.EventEmitter;
   declare gamebus: PhaserGamebus;
-  declare rexUI: RexUIPlugin;
+  declare rexUI: UIPlugin;
 
   constructor() {
     super("Game");
@@ -38,9 +38,6 @@ export class MainGame extends Scene {
 
     new SmallWorkspace(this);
 
-    new Dispenser(this, 0, "MEAT_PATTY");
-    new Dispenser(this, 1, "MEAT_PATTY");
-    new Dispenser(this, 2, "MEAT_PATTY");
     new Dispenser(this, 3, "MEAT_PATTY");
 
     this.matter.world.setBounds().disableGravity();
@@ -63,40 +60,43 @@ export class MainGame extends Scene {
     new BurgerPatty(this, 370, 480, RESOURCES.BURGER_PATTY);
     new Patty(this, 370, 380, RESOURCES.BURGER_PATTY);*/
 
-    this.orders.newOrder();
+    if (import.meta.env.DEV) {
+      const ing = new IngredientsStack(this, 620, 600);
 
-    const ing = new IngredientsStack(this, 620, 600);
+      ing.addIngredient(
+        new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5))
+      );
+      ing.addIngredient(
+        new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5))
+      );
+      ing.addIngredient(
+        new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5))
+      );
+      ing.addIngredient(
+        new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5))
+      );
+      ing.addIngredient(
+        new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5))
+      );
 
-    ing.addIngredient(new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5)));
-    ing.addIngredient(new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5)));
-    ing.addIngredient(new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5)));
-    ing.addIngredient(new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5)));
-    ing.addIngredient(new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5)));
+      const ing2 = new IngredientsStack(this, 720, 600);
+      ing2.addIngredient(
+        new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5))
+      );
+      ing2.addIngredient(
+        new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5))
+      );
+      ing2.addIngredient(
+        new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5))
+      );
 
-    const ing2 = new IngredientsStack(this, 720, 600);
-    ing2.addIngredient(
-      new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5))
-    );
-    ing2.addIngredient(
-      new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5))
-    );
-    ing2.addIngredient(
-      new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5))
-    );
+      const ing3 = new IngredientsStack(this, 820, 600);
+      ing3.addIngredient(new MeatPatty(this, 0, 0));
+      ing3.addIngredient(new MeatPatty(this, 0, 0));
 
-    const ing3 = new IngredientsStack(this, 820, 600);
-    ing3.addIngredient(new MeatPatty(this, 0, 0));
-    ing3.addIngredient(new MeatPatty(this, 0, 0));
-
-    const ing4 = new IngredientsStack(this, 860, 600);
-    ing4.addIngredient(new MeatPatty(this, 0, 0, QUALITY.BURNT));
-
-    new Stacked(this, 420, 600, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 420, 622, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 420, 621, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 410, 620, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 400, 620, RESOURCES.BURGER_BOTTOM);
-    new Stacked(this, 400, 620, RESOURCES.BURGER_BOTTOM);
+      const ing4 = new IngredientsStack(this, 860, 600);
+      ing4.addIngredient(new MeatPatty(this, 0, 0, QUALITY.BURNT));
+    }
 
     this.matter.add.mouseSpring({
       stiffness: 0.2,
@@ -197,66 +197,4 @@ class Stacked extends Phaser.Physics.Matter.Image {
 
     this.stacked3.displayOriginX = 50 + (this.x / this.worldWidth - 0.3) * -200;
   }
-}
-
-/**
- */
-
-export class Patty extends Phaser.Physics.Matter.Image {
-  stacked: Phaser.GameObjects.Image;
-  stacked2: Phaser.GameObjects.Image;
-
-  worldWidth: number;
-  worldHeight: number;
-  constructor(
-    scene: Phaser.Scene,
-    x: number,
-    y: number,
-    texture: string,
-    options: Phaser.Types.Physics.Matter.MatterBodyConfig = {}
-  ) {
-    super(scene.matter.world, x, y, texture, 0, {
-      ...options,
-    });
-
-    this.setBody({
-      type: "polygon",
-      sides: 8,
-      width: 40,
-      height: 20,
-    });
-
-    this.setFixedRotation();
-
-    this.setFriction(0, 0.1, 1);
-
-    this.setDisplaySize(48, 48);
-    this.setDisplayOrigin(55, 100);
-
-    scene.add.existing(this);
-
-    this.setInteractive();
-
-    this.on("pointermove", () => {
-      if (this.scene.input.manager.canvas.style.cursor !== "grabbing") {
-        this.scene.input.manager.canvas.style.cursor = "grab";
-      }
-    });
-
-    this.on("pointerdown", () => {
-      this.scene.input.manager.canvas.style.cursor = "grabbing";
-    });
-
-    this.on("pointerup", () => {
-      this.scene.input.manager.canvas.style.cursor = "auto";
-    });
-
-    this.on("pointerout", () => {
-      if (!this.scene.input.activePointer.isDown) {
-        this.scene.input.manager.canvas.style.cursor = "auto";
-      }
-    });
-  }
-
-  preUpdate() {}
 }
