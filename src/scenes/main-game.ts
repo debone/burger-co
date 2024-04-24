@@ -13,7 +13,7 @@ import { CustomerQueue } from "../systems/customer-queue";
 import { Orders } from "../systems/orders";
 import { QUALITY } from "../ui/quality-indicator/quality-indicator";
 
-export class Game extends Scene {
+export class MainGame extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
   msg_text: Phaser.GameObjects.Text;

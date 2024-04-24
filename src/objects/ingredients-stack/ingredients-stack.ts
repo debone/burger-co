@@ -1,12 +1,12 @@
 import { BodyType } from "matter";
 import { GameObjects } from "phaser";
-import RexUIPlugin from "../../lib/rexui";
-import { Game } from "../../scenes/Game";
-import { IngredientsStackDisplay } from "../../ui/ingredients-stack-display/ingredients-stack-display";
+import { MainGame } from "../../scenes/main-game";
 import { INGREDIENTS_OBJECTS } from "../ingredients";
+import { IngredientsStackDisplay } from "../../ui/ingredients-stack-display/ingredients-stack-display";
+import RexUIPlugin from "../../lib/rexui";
 
 export class IngredientsStack extends Phaser.GameObjects.Container {
-  declare scene: Game;
+  declare scene: MainGame;
   bus: Phaser.Events.EventEmitter;
   physics:
     | Phaser.Physics.Matter.Sprite
@@ -20,7 +20,7 @@ export class IngredientsStack extends Phaser.GameObjects.Container {
 
   ingredientsStackDisplay: RexUIPlugin.Menu | null;
 
-  constructor(scene: Game, x: number, y: number) {
+  constructor(scene: MainGame, x: number, y: number) {
     super(scene, x, y);
     scene.add.existing(this);
 
@@ -40,7 +40,7 @@ export class IngredientsStack extends Phaser.GameObjects.Container {
     this.worldWidth = scene.matter.world.walls.right?.position.x!;
   }
 
-  setupPhysics(scene: Game) {
+  setupPhysics(scene: MainGame) {
     this.dragState = "down";
 
     this.physics = this.scene.matter.add.gameObject(this, {}, true);
@@ -206,8 +206,6 @@ export class IngredientsStack extends Phaser.GameObjects.Container {
             status: ingredient.quality,
           }))
       );
-
-      this.add(this.ingredientsStackDisplay);
     }
   }
 

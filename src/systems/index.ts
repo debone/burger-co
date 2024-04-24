@@ -1,6 +1,6 @@
-import { Game } from "../scenes/Game";
+import { MainGame } from "../scenes/main-game";
 
 export interface System {
-  create(scene: Game): this;
+  create(scene: MainGame): this;
   update(time: number, delta: number): void;
 }

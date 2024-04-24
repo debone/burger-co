@@ -1,5 +1,5 @@
 import RexUIPlugin from "../../lib/rexui";
-import { Game } from "../../scenes/Game";
+import { MainGame } from "../../scenes/main-game";
 import {
   QUALITY,
   QualityIndicator,
@@ -7,7 +7,7 @@ import {
 
 export class IngredientsStackDisplay {
   static create(
-    scene: Game,
+    scene: MainGame,
     x: number,
     y: number,
     items: { name: string; status: QUALITY }[]
@@ -65,6 +65,8 @@ export class IngredientsStackDisplay {
       .on("button.click", (button: RexUIPlugin.Buttons) => {
         console.log(button);
       });
+
+    menu.depth = 9999;
 
     return menu;
   }

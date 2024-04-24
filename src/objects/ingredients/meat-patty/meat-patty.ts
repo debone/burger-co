@@ -1,6 +1,6 @@
 import { INGREDIENTS, INGREDIENTS_REPRESENTATION, Ingredients } from "..";
 import { RESOURCES } from "../../../assets";
-import { Game } from "../../../scenes/Game";
+import { MainGame } from "../../../scenes/main-game";
 import {
   QUALITY,
   QualityIndicator,
@@ -19,7 +19,7 @@ export class MeatPatty
   ingredient: INGREDIENTS_REPRESENTATION;
 
   constructor(
-    scene: Game,
+    scene: MainGame,
     x: number,
     y: number,
     quality: QUALITY = QUALITY.RAW

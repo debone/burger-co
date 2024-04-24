@@ -1,9 +1,9 @@
 import { Customer } from "..";
 import { RESOURCES } from "../../../assets";
-import { Game } from "../../../scenes/Game";
+import { MainGame } from "../../../scenes/main-game";
 
 export class Bezelbub extends Phaser.GameObjects.Container implements Customer {
-  declare scene: Game;
+  declare scene: MainGame;
 
   bezelbub: Phaser.GameObjects.Image;
 

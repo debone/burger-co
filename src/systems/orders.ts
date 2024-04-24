@@ -1,6 +1,6 @@
 import { RESOURCES } from "../assets";
 import { INGREDIENTS } from "../objects/ingredients";
-import { Game } from "../scenes/Game";
+import { MainGame } from "../scenes/main-game";
 import { QUALITY } from "../ui/quality-indicator/quality-indicator";
 
 export const MAX_ORDERS = 3;
@@ -17,9 +17,9 @@ export class Orders {
   orderId = 1;
   orders: Map<number, Order> = new Map();
 
-  scene: Game;
+  scene: MainGame;
 
-  constructor(scene: Game) {
+  constructor(scene: MainGame) {
     this.scene = scene;
   }
 

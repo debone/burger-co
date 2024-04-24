@@ -1,14 +1,14 @@
-import { Boot } from "./scenes/boot/Boot";
-import { Game as MainGame } from "./scenes/Game";
-import { GameOver } from "./scenes/GameOver";
-import { MainMenu } from "./scenes/MainMenu";
-import { Preloader } from "./scenes/boot/Preloader";
+import { Boot } from "./scenes/boot/boot";
+import { MainGame } from "./scenes/main-game";
+import { GameOver } from "./scenes/game-over";
+import { MainMenu } from "./scenes/main-menu";
+import { Preloader } from "./scenes/boot/preloader";
+import { Debug } from "./scenes/debug";
 
 import { Game, Types } from "phaser";
 import PhaserGamebus from "./lib/gamebus";
 
 import RexUIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
-import { Debug } from "./scenes/Debug";
 
 export const GAME_WIDTH = 1384;
 export const GAME_HEIGHT = 850;

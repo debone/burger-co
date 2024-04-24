@@ -12,9 +12,4 @@ export default defineConfig({
     },
   },
   mode: "development",
-  server: {
-    watch: {
-      usePolling: true,
-    },
-  },
 });
