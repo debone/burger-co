@@ -2,7 +2,7 @@ import { Boot } from "./scenes/boot/boot-scene";
 import { MainGame } from "./scenes/main-game";
 import { GameOver } from "./scenes/game-over";
 import { MainMenu } from "./scenes/main-menu";
-import { Preloader } from "./scenes/boot/preloader";
+import { Preloader } from "./scenes/boot/preloader-scene";
 import { Debug } from "./scenes/debug";
 
 import { Game, Types } from "phaser";
