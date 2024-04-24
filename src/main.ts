@@ -3,7 +3,7 @@ import { MainGame } from "./scenes/main-game";
 import { GameOver } from "./scenes/game-over";
 import { MainMenu } from "./scenes/main-menu";
 import { Preloader } from "./scenes/boot/preloader-scene";
-import { Debug } from "./scenes/debug";
+import { Debug } from "./scenes/debug-scene";
 
 import { Game, Types } from "phaser";
 import PhaserGamebus from "./lib/gamebus";
