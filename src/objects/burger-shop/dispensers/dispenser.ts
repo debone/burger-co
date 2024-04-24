@@ -2,8 +2,8 @@ import { getNextDispenserPosition } from ".";
 import { RESOURCES } from "../../../assets";
 import { Vector2 } from "../../../common/helpers";
 import { INGREDIENTS } from "../../ingredients";
-import { IngredientsStack } from "../../ingredientsStack/ingredientsStack";
-import { QUALITY } from "../../ui/quality-indicator/quality-indicator";
+import { IngredientsStack } from "../../ingredients-stack/ingredients-stack";
+import { QUALITY } from "../../../ui/quality-indicator/quality-indicator";
 
 export class Dispenser extends Phaser.GameObjects.Sprite {
   open: boolean;

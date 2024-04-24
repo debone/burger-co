@@ -15,4 +15,8 @@ export const RESOURCES = {
 
   BURGER_SHOP_DRAWER_CLOSED: "burger-shop_drawer-close.png",
   BURGER_SHOP_DRAWER_OPEN: "burger-shop_food-drawer-open.png",
+
+  CUSTOMER_BEZELBUB: "bezelbub.png",
+
+  ORDER: "order.png",
 } as const;

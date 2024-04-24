@@ -10,12 +10,17 @@ import PhaserGamebus from "./lib/gamebus";
 import RexUIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 import { Debug } from "./scenes/Debug";
 
+export const GAME_WIDTH = 1384;
+export const GAME_HEIGHT = 850;
+
+export const FINAL_CUSTOMER_GOAL = GAME_HEIGHT - 100;
+
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Types.Core.GameConfig = {
   type: Phaser.AUTO,
-  width: 1384,
-  height: 850,
+  width: GAME_WIDTH,
+  height: GAME_HEIGHT,
   parent: "game-container",
   backgroundColor: "#183f39",
   scale: {

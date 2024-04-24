@@ -1,18 +1,17 @@
 import { Scene } from "phaser";
 
-import RexUIPlugin from "../lib/rexui";
 import PhaserGamebus from "../lib/gamebus";
+import RexUIPlugin from "../lib/rexui";
 
 import { RESOURCES } from "../assets";
 
-import { Dispenser } from "../objects/burgerShop/dispensers/dispenser";
-import { SmallWorkspace } from "../objects/burgerShop/workspaces/smallWorkspace";
-import {
-  IngredientsStack,
-  IngredientsStack,
-} from "../objects/ingredientsStack/ingredientsStack";
-import { BurgerPatty } from "../objects/ingredients/meat-patty/meat-patty";
-import { QUALITY } from "../objects/ui/quality-indicator/quality-indicator";
+import { Dispenser } from "../objects/burger-shop/dispensers/dispenser";
+import { SmallWorkspace } from "../objects/burger-shop/workspaces/small-workspace";
+import { IngredientsStack } from "../objects/ingredients-stack/ingredients-stack";
+import { MeatPatty } from "../objects/ingredients/meat-patty/meat-patty";
+import { CustomerQueue } from "../systems/customer-queue";
+import { Orders } from "../systems/orders";
+import { QUALITY } from "../ui/quality-indicator/quality-indicator";
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -34,6 +33,8 @@ export class Game extends Scene {
 
     this.background = this.add.image(0, 0, RESOURCES.BURGER_SHOP_EMPTY);
     this.background.setOrigin(0, 0);
+
+    this.registerSystems();
 
     new SmallWorkspace(this);
 
@@ -62,41 +63,33 @@ export class Game extends Scene {
     new BurgerPatty(this, 370, 480, RESOURCES.BURGER_PATTY);
     new Patty(this, 370, 380, RESOURCES.BURGER_PATTY);*/
 
+    this.orders.newOrder();
+
     const ing = new IngredientsStack(this, 620, 600);
 
-    ing.addIngredient(
-      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
-    );
-    ing.addIngredient(
-      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
-    );
-    ing.addIngredient(
-      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
-    );
-    ing.addIngredient(
-      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
-    );
-    ing.addIngredient(
-      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
-    );
+    ing.addIngredient(new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5)));
+    ing.addIngredient(new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5)));
+    ing.addIngredient(new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5)));
+    ing.addIngredient(new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5)));
+    ing.addIngredient(new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5)));
 
     const ing2 = new IngredientsStack(this, 720, 600);
     ing2.addIngredient(
-      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
+      new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5))
     );
     ing2.addIngredient(
-      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
+      new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5))
     );
     ing2.addIngredient(
-      new BurgerPatty(this, 0, 0, Math.floor(Math.random() * 5))
+      new MeatPatty(this, 0, 0, Math.floor(Math.random() * 5))
     );
 
     const ing3 = new IngredientsStack(this, 820, 600);
-    ing3.addIngredient(new BurgerPatty(this, 0, 0));
-    ing3.addIngredient(new BurgerPatty(this, 0, 0));
+    ing3.addIngredient(new MeatPatty(this, 0, 0));
+    ing3.addIngredient(new MeatPatty(this, 0, 0));
 
     const ing4 = new IngredientsStack(this, 860, 600);
-    ing4.addIngredient(new BurgerPatty(this, 0, 0, QUALITY.BURNT));
+    ing4.addIngredient(new MeatPatty(this, 0, 0, QUALITY.BURNT));
 
     new Stacked(this, 420, 600, RESOURCES.BURGER_BOTTOM);
     new Stacked(this, 420, 622, RESOURCES.BURGER_BOTTOM);
@@ -122,6 +115,14 @@ export class Game extends Scene {
     this.input.once("pointerdown", () => {
       //      this.scene.start("GameOver");
     });
+  }
+
+  orders: Orders;
+  customerQueue: CustomerQueue;
+
+  registerSystems() {
+    this.orders = new Orders(this);
+    this.customerQueue = new CustomerQueue(this).create().play();
   }
 }
 

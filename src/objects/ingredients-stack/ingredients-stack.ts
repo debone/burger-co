@@ -1,9 +1,9 @@
 import { BodyType } from "matter";
 import { GameObjects } from "phaser";
-import { Game } from "../../scenes/Game";
-import { INGREDIENTS_OBJECTS } from "../ingredients";
-import { IngredientsStackDisplay } from "../ui/ingredients-stack-display/ingredients-stack-display";
 import RexUIPlugin from "../../lib/rexui";
+import { Game } from "../../scenes/Game";
+import { IngredientsStackDisplay } from "../../ui/ingredients-stack-display/ingredients-stack-display";
+import { INGREDIENTS_OBJECTS } from "../ingredients";
 
 export class IngredientsStack extends Phaser.GameObjects.Container {
   declare scene: Game;
@@ -206,6 +206,8 @@ export class IngredientsStack extends Phaser.GameObjects.Container {
             status: ingredient.quality,
           }))
       );
+
+      this.add(this.ingredientsStackDisplay);
     }
   }
 

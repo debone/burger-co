@@ -4,9 +4,9 @@ import { Game } from "../../../scenes/Game";
 import {
   QUALITY,
   QualityIndicator,
-} from "../../ui/quality-indicator/quality-indicator";
+} from "../../../ui/quality-indicator/quality-indicator";
 
-export class BurgerPatty
+export class MeatPatty
   extends Phaser.GameObjects.Container
   implements Ingredients
 {
@@ -69,7 +69,7 @@ export const meatPatty = {
   sprite: RESOURCES.BURGER_PATTY,
   dispenserOffset: { x: -35, y: 160 },
   cookStepTime: 250,
-  object: BurgerPatty,
+  object: MeatPatty,
   tint: {
     [QUALITY.RAW]: 0xff33aa,
     [QUALITY.LUKEWARM]: 0xff99dd,

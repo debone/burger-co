@@ -1,5 +1,5 @@
 import { RESOURCES } from "../../../assets";
-import { makeMatterShape } from "./workspacesGeometry";
+import { makeMatterShape } from "./workspaces-geometry";
 
 export class SmallWorkspace extends Phaser.GameObjects.Image {
   constructor(scene: Phaser.Scene) {

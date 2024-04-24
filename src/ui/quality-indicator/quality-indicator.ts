@@ -1,4 +1,4 @@
-import { RESOURCES } from "../../../assets";
+import { RESOURCES } from "../../assets";
 
 export enum QUALITY {
   RAW = 0,
