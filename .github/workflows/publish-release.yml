@@ -2,7 +2,7 @@ name: Publish to release branch itch.io
 
 env:
   ITCHIO_CHANNEL: html5
-  ITCHIO_GAME: <fill-the-blank>
+  ITCHIO_GAME: devils-hunger-souls
   ITCHIO_USERNAME: debone
 
 # You can block these tags from push on github settings
@@ -23,7 +23,7 @@ jobs:
           lfs: true
       - name: Build
         run: |
-          npm
+          npm install
           npm run build
       - name: Set Version
         run: |
