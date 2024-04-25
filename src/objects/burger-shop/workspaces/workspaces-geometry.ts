@@ -113,7 +113,6 @@ export const geometries = {
       ],
     ],
   },
-
   topHigherCounter: {
     x: 860,
     y: 495,
@@ -147,6 +146,18 @@ export const geometries = {
         { x: 680, y: 0 },
         { x: 680, y: 10 },
         { x: 0, y: 10 },
+      ],
+    ],
+  },
+  trash: {
+    x: 1285,
+    y: 670,
+    vertices: [
+      [
+        { x: 0, y: 0 },
+        { x: 150, y: 0 },
+        { x: 150, y: 100 },
+        { x: 0, y: 100 },
       ],
     ],
   },

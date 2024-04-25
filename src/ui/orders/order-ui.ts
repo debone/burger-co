@@ -18,7 +18,11 @@ export class OrderUI extends Phaser.GameObjects.Container {
       scene.add.image(0, 0, RESOURCES.ORDER).setOrigin(0, 0).setScale(1.25)
     );
     this.add(
-      scene.add.text(10, 10, `Order ${id}`, { fontSize: "32px", color: "#000" })
+      scene.add.text(20, 20, `Order ${id}`, {
+        fontFamily: "DotGothic16",
+        fontSize: "24px",
+        color: "#0a202f",
+      })
     );
 
     const gridSizer = scene.rexUI.add
@@ -55,7 +59,11 @@ export class OrderUI extends Phaser.GameObjects.Container {
     this.add(gridSizer);
   }
 
-  deliveredMain() {
-    this.getFirst().setTint(0xaffaa);
+  deliveredMain(positiveOutcome: boolean) {
+    if (positiveOutcome) {
+      this.getFirst().setTint(0xaffaa);
+    } else {
+      this.getFirst().setTint(0xffaaaa);
+    }
   }
 }

@@ -97,9 +97,14 @@ export class Bezelbub extends Phaser.GameObjects.Container implements Customer {
     }
   }
 
-  delivered(): void {
+  delivered(positiveOutcome: boolean): void {
     this.state = "happy";
-    this.progressBar.setBarColor(0x00ff00);
+    if (positiveOutcome) {
+      this.progressBar.setBarColor(0x00ff00);
+    } else {
+      this.progressBar.setBarColor(0xff0000);
+    }
+
     this.progressBar.setValue(1);
 
     this.scene.time.addEvent({

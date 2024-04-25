@@ -5,5 +5,8 @@ export interface Customer extends Phaser.GameObjects.Container {
   order: number;
   state: "moving" | "waiting" | "ordering" | "leaving" | "happy";
 
-  delivered(): void;
+  maxPatience: number;
+  patience: number;
+
+  delivered(positiveOutcome: boolean): void;
 }

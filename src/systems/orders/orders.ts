@@ -17,6 +17,7 @@ export interface OrderStruct {
   customerId: number;
   order: Order;
   container: OrderUI;
+  fulfilled: boolean;
 }
 
 export const ORDER_START_POS_X = 300;
@@ -43,6 +44,7 @@ export class Orders {
       id: this.nextOrderId,
       customerId,
       order,
+      fulfilled: false,
       container: new OrderUI(
         this.nextOrderId,
         this.scene,
@@ -79,23 +81,57 @@ export class Orders {
 
   deliverMainOrder(
     ingredients: { ingredient: INGREDIENTS_OBJECTS; quality: QUALITY }[]
-  ) {
-    for (let order of this.orders.values()) {
-      if (
-        order.order.main.every((main) =>
-          ingredients.some(
-            (ingredient) =>
-              ingredient.ingredient.name ===
-                INGREDIENTS[main.ingredient].name &&
-              ingredient.quality === main.status
-          )
-        )
-      ) {
-        order.container.deliveredMain();
-        this.scene.customerQueue.deliveredOrder(order.customerId);
+  ): boolean {
+    if (this.orders.size === 0) return false;
 
-        break;
-      }
+    let someOrderFullfilled = false;
+
+    for (let order of this.orders.values()) {
+      if (order.fulfilled) continue;
+
+      // Check if all ingredients are in the order
+      let inPrecision =
+        order.order.main.length === ingredients.length &&
+        order.order.main.every(
+          (main, i) =>
+            ingredients[i].ingredient.name === INGREDIENTS[main.ingredient].name
+        );
+
+      this.scene.addScore("precision", inPrecision ? 1 : -0.5);
+
+      let inQuality =
+        order.order.main.length === ingredients.length &&
+        order.order.main.every(
+          (main, i) => ingredients[i].quality === main.status
+        );
+
+      this.scene.addScore("quality", inQuality ? 1 : -0.5);
+
+      let inTime =
+        this.scene.customerQueue.customers.get(order.customerId)!.patience >
+        this.scene.customerQueue.customers.get(order.customerId)!.maxPatience /
+          2;
+
+      this.scene.addScore("timing", inTime ? 1 : -0.5);
+
+      order.fulfilled = true;
+      someOrderFullfilled = true;
+
+      order.container.deliveredMain(inPrecision && inQuality && inTime);
+      this.scene.customerQueue.deliveredOrder(
+        order.customerId,
+        inPrecision && inQuality && inTime
+      );
+      break;
     }
+
+    return someOrderFullfilled;
+  }
+
+  destroy() {
+    this.orders.forEach((order) => {
+      order.container.destroy();
+    });
+    this.orders.clear();
   }
 }

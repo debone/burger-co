@@ -88,4 +88,10 @@ export class Dispenser extends Phaser.GameObjects.Sprite {
       }
     );
   }
+
+  destroy(): void {
+    this.ingredientName.destroy();
+    this.ingredientSprite.destroy();
+    super.destroy();
+  }
 }

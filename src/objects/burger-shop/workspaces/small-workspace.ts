@@ -68,6 +68,56 @@ export class SmallWorkspace extends Phaser.GameObjects.Image {
       }),
     ];
 
+    const trash = makeMatterShape("trash", this.scene, {
+      isStatic: true,
+      isSensor: true,
+      ignorePointer: true,
+    });
+
+    scene.matter.add.fromVertices(
+      692,
+      -350,
+      [
+        [
+          { x: -1000, y: -1000 },
+          { x: 3584, y: -1000 },
+          { x: 3584, y: 300 },
+          { x: -1000, y: 300 },
+        ],
+      ],
+      {
+        isStatic: true,
+        ignorePointer: true,
+        collisionFilter: {
+          category: 2,
+          mask: 0x11111,
+        },
+        label: "top",
+      }
+    );
+
+    scene.matter.add.fromVertices(
+      -380,
+      -350,
+      [
+        [
+          { x: -1000, y: -1000 },
+          { x: 300, y: -1000 },
+          { x: 300, y: 3000 },
+          { x: -1000, y: 3000 },
+        ],
+      ],
+      {
+        isStatic: true,
+        ignorePointer: true,
+        collisionFilter: {
+          category: 2,
+          mask: 0x11111,
+        },
+        label: "top",
+      }
+    );
+
     //console.log("he", this.scene.matter.world.nextCategory());
 
     /*

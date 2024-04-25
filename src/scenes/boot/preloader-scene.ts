@@ -2,6 +2,7 @@ import { Scene } from "phaser";
 import { RESOURCES } from "../../assets";
 
 import statusIconsImg from "../../../public/assets/status-icons.png?url";
+import { GAME_WIDTH } from "../../main";
 
 export const imageIso = import.meta.glob<{ default: string }>(
   "../../../public/assets/*.png",
@@ -19,6 +20,8 @@ export const RESOURCES_INDEX = Object.keys(RESOURCES).reduce(
 
 export const RESOURCES_LIST = Object.values(RESOURCES);
 
+declare var WebFont: any;
+
 export class Preloader extends Scene {
   constructor() {
     super("Preloader");
@@ -26,13 +29,15 @@ export class Preloader extends Scene {
 
   init() {
     //  We loaded this image in our Boot Scene, so we can display it here
-    this.add.image(512, 384, RESOURCES.BACKGROUND);
+    //this.add.image(512, 384, RESOURCES.BACKGROUND);
 
     //  A simple progress bar. This is the outline of the bar.
-    this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
+    this.add
+      .rectangle(GAME_WIDTH / 2, 484, 468, 32)
+      .setStrokeStyle(1, 0xffffff);
 
     //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
-    const bar = this.add.rectangle(512 - 230, 384, 4, 28, 0xffffff);
+    const bar = this.add.rectangle(GAME_WIDTH / 2 - 230, 484, 4, 28, 0xffffff);
 
     //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
     this.load.on("progress", (progress: number) => {
@@ -42,6 +47,11 @@ export class Preloader extends Scene {
   }
 
   preload() {
+    this.load.script(
+      "webfont",
+      "https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"
+    );
+
     for (const sprite in imageIso) {
       this.load.image(
         sprite.replace("../../../public/assets/", ""),
@@ -55,15 +65,22 @@ export class Preloader extends Scene {
   }
 
   create() {
-    //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
-    //  For example, you can define global animations here, so we can use them in other scenes.
-    if (import.meta.env.DEV) {
-      this.scene.run("Debug");
-      this.scene.start("Game");
-    } else {
-      this.time.delayedCall(1000, () => {
-        this.scene.start("MainMenu");
-      });
-    }
+    WebFont.load({
+      google: {
+        families: ["DotGothic16"],
+      },
+      active: () => {
+        if (import.meta.env.DEV) {
+          this.scene.run("Debug");
+          this.scene.start("Game");
+        } else {
+          this.add.image(0, 0, RESOURCES.MAIN_MENU).setOrigin(0, 0);
+
+          this.input.once("pointerdown", () => {
+            this.scene.start("MainMenu");
+          });
+        }
+      },
+    });
   }
 }

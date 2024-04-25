@@ -4,6 +4,7 @@ import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin";
 import { MainGame } from "../../scenes/main-game";
 import { IngredientsStackDisplay } from "../../ui/ingredients-stack-display/ingredients-stack-display";
 import { INGREDIENTS_OBJECTS } from "../ingredients";
+import { RESOURCES } from "../../assets";
 
 export class IngredientsStack extends Phaser.GameObjects.Container {
   declare scene: MainGame;
@@ -17,6 +18,7 @@ export class IngredientsStack extends Phaser.GameObjects.Container {
   worldWidth: number;
 
   shadow: Phaser.GameObjects.Graphics;
+  particles: GameObjects.Particles.ParticleEmitter;
 
   ingredientsStackDisplay: UIPlugin.Menu | null;
 
@@ -30,6 +32,15 @@ export class IngredientsStack extends Phaser.GameObjects.Container {
 
     this.setSize(32, 32);
     this.setInteractive();
+
+    this.particles = scene.add.particles(0, 0, RESOURCES.PARTICLE, {
+      lifespan: 250,
+      speed: { min: 100, max: 150 },
+      scale: { start: 2, end: 1 },
+      rotate: { start: 0, end: 180 },
+      gravityY: 200,
+      emitting: false,
+    });
 
     this.shadow = scene.make
       .graphics({ fillStyle: { color: 0x000000, alpha: 0.25 } })
@@ -70,25 +81,38 @@ export class IngredientsStack extends Phaser.GameObjects.Container {
       .getMatterBodies()
       .find((body) => body.label === "lowerCounter") as BodyType;
 
+    let trash = this.scene.matter
+      .getMatterBodies()
+      .find((body) => body.label === "trash") as BodyType;
+
     this.physics.setOnCollideActive((collision) => {
       if (collision.bodyA === grill) {
         const ingredient = this.getFirst("ingredient");
         if (ingredient && "cookTick" in ingredient) {
+          this.particles.emitParticleAt(this.x, this.y - 10, 1);
           ingredient.cookTick();
         }
       }
 
-      if (collision.bodyA === lowerCounter) {
+      if (collision.bodyA === lowerCounter && scene.orders.orders.size > 0) {
         const deliver = this.getAll("ingredient")
           .reverse()
           .map((ingredient) => ({
             ingredient: ingredient.ingredient,
             quality: ingredient.quality,
           })) as { ingredient: INGREDIENTS_OBJECTS; quality: number }[];
-        console.log("Delivered!", deliver);
 
-        scene.orders.deliverMainOrder(deliver);
+        if (scene.orders.deliverMainOrder(deliver)) {
+          this.destroy();
+          if (this.ingredientsStackDisplay) {
+            this.ingredientsStackDisplay.collapse();
+            this.ingredientsStackDisplay.destroy();
+            this.ingredientsStackDisplay = null;
+          }
+        }
+      }
 
+      if (collision.bodyA === trash) {
         this.destroy();
         if (this.ingredientsStackDisplay) {
           this.ingredientsStackDisplay.collapse();
@@ -193,7 +217,7 @@ export class IngredientsStack extends Phaser.GameObjects.Container {
     }
 
     this.scene.input.manager.canvas.style.cursor = "grabbing";
-    this.physics.setCollisionCategory(2);
+    this.physics.setCollisionCategory(3);
     this.physics.setCollidesWith([2]);
     this.dragState = "dragging";
   }
@@ -208,7 +232,7 @@ export class IngredientsStack extends Phaser.GameObjects.Container {
 
     this.scene.input.manager.canvas.style.cursor = "auto";
     this.physics.setCollisionCategory(1);
-    this.physics.setCollidesWith([1]);
+    this.physics.setCollidesWith([1, 2]);
     this.dragState = "down";
   }
 

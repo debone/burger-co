@@ -55,7 +55,14 @@ export class CustomerQueue extends Phaser.Time.Timeline {
     });
   }
 
-  deliveredOrder(id: number) {
-    this.customers.get(id)?.delivered();
+  wipeCustomers() {
+    this.customers.forEach((customer) => {
+      customer.destroy();
+    });
+    this.customers.clear();
+  }
+
+  deliveredOrder(id: number, positiveOutcome: boolean) {
+    this.customers.get(id)?.delivered(positiveOutcome);
   }
 }
