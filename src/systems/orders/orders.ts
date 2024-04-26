@@ -1,3 +1,4 @@
+import { pickRandom } from "../../common/helpers";
 import { INGREDIENTS, INGREDIENTS_OBJECTS } from "../../objects/ingredients";
 import { MainGame } from "../../scenes/main-game";
 import { OrderUI } from "../../ui/orders/order-ui";
@@ -34,9 +35,29 @@ export class Orders {
     this.scene = scene;
   }
 
+  getRecipe() {
+    const availableRecipes = [];
+    if (this.scene.day > 2) {
+      if (this.scene.clockTime < this.scene.dayDuration / 2)
+        availableRecipes.push(RECIPES["devils-burger"]());
+      availableRecipes.push(RECIPES["soul-burger"]());
+    }
+    if (this.scene.day > 1) {
+      if (this.scene.clockTime < this.scene.dayDuration / 2)
+        availableRecipes.push(RECIPES["cheese-black-burger"]());
+      availableRecipes.push(RECIPES["cheese-burger"]());
+    }
+
+    if (this.scene.clockTime < this.scene.dayDuration / 2)
+      availableRecipes.push(RECIPES["double-burger"]());
+    availableRecipes.push(RECIPES["basic-burger"]());
+
+    return pickRandom(availableRecipes);
+  }
+
   newOrder(customerId: number): OrderStruct {
     const order: Order = {
-      main: RECIPES["basic-burger"](),
+      main: this.getRecipe(),
       drink: false,
       side: false,
     };

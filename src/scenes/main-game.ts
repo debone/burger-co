@@ -43,6 +43,11 @@ export class MainGame extends Scene {
       .setOrigin(0, 0)
       .setDepth(9999);
 
+    this.add
+      .image(0, 0, RESOURCES.BURGER_SHOP_TOP_FAN)
+      .setOrigin(0, 0)
+      .setDepth(9999);
+
     this.matter.world.setBounds().disableGravity();
 
     new SmallWorkspace(this);
@@ -68,6 +73,8 @@ export class MainGame extends Scene {
     new Patty(this, 370, 380, RESOURCES.BURGER_PATTY);*/
 
     if (import.meta.env.DEV) {
+      //this.orders.newOrder(10);
+
       const ing = new IngredientsStack(this, 620, 600);
 
       ing.addIngredient(
@@ -142,7 +149,7 @@ export class MainGame extends Scene {
   dayQuality: number = 0;
   dayTiming: number = 0;
 
-  dayDuration: number = 100;
+  dayDuration: number = 240;
   clockTime: number = this.dayDuration;
   clockTick: Phaser.Time.TimerEvent;
   clockText: Phaser.GameObjects.Text;
@@ -201,6 +208,21 @@ export class MainGame extends Scene {
     this.day++;
     this.clockTime = this.dayDuration;
 
+    this.dispensers.push(new Dispenser(this, 0, "BOTTOM_BUN"));
+    this.dispensers.push(new Dispenser(this, 3, "MEAT_PATTY"));
+    this.dispensers.push(new Dispenser(this, 4, "TOP_BUN"));
+
+    if (this.day > 1) {
+      this.dispensers.push(new Dispenser(this, 2, "DEVILS_CHEDDAR"));
+      this.dispensers.push(new Dispenser(this, 6, "GOAT_EYES"));
+      this.dispensers.push(new Dispenser(this, 10, "DRAGON_CLAW"));
+    }
+    if (this.day > 2) {
+      this.dispensers.push(new Dispenser(this, 1, "SOUL_BUN_BOTTOM"));
+      this.dispensers.push(new Dispenser(this, 5, "SOUL_BUN_TOP"));
+      this.dispensers.push(new Dispenser(this, 9, "HORN_BUN_TOP"));
+    }
+
     const dayText = this.add
       .text(600, 325, `Day ${this.day}`, {
         fontFamily: "DotGothic16",
@@ -210,7 +232,7 @@ export class MainGame extends Scene {
       .setShadow(0, 0, "#0a202f", 3, true, true);
 
     this.clockText = this.add
-      .text(20, 20, "XX:XX", {
+      .text(20, 20, "", {
         fontFamily: "DotGothic16",
         fontSize: "48px",
         color: "#d32836",
@@ -235,8 +257,6 @@ export class MainGame extends Scene {
     this.registerSystems();
 
     this.customerQueue.play();
-
-    this.dispensers.push(new Dispenser(this, 3, "MEAT_PATTY"));
   }
 
   endDay() {

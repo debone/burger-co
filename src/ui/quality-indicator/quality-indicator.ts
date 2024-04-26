@@ -42,4 +42,9 @@ export class QualityIndicator extends Phaser.GameObjects.Container {
     (this.first! as Phaser.GameObjects.Sprite).setFrame(this.status);
     return this.status;
   }
+
+  setQuality(quality: QUALITY) {
+    this.status = quality;
+    (this.first! as Phaser.GameObjects.Sprite).setFrame(this.status);
+  }
 }

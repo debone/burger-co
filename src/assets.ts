@@ -13,6 +13,7 @@ export const RESOURCES = {
 
   BURGER_SHOP_EMPTY: "burger-shop_empty-shop.png",
   BURGER_SHOP_CEILING: "burger-shop_ceiling.png",
+  BURGER_SHOP_TOP_FAN: "top-fan.png",
 
   BURGER_SHOP_WORKSPACE_SMALL: "burger-shop_workspace-small.png",
   BURGER_SHOP_WORKSPACE_BIG: "burger-shop_workspace-big.png",
@@ -25,4 +26,12 @@ export const RESOURCES = {
   ORDER: "order.png",
 
   PARTICLE: "particle.png",
+
+  DRAGON_CLAW: "dragon-claw.png",
+  DEVILS_CHEDDAR: "devils-cheddar.png",
+  GOAT_EYES: "goat-eyes.png",
+  SOUL_BUN_TOP: "soul-bun-top-export.png",
+  SOUL_BUN_BOTTOM: "soul-bun-bottom-export.png",
+
+  HORN_BUN_TOP: "horn-bun-top-export.png",
 } as const;

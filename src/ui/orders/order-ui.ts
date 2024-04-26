@@ -34,7 +34,7 @@ export class OrderUI extends Phaser.GameObjects.Container {
         row: 15,
         space: {
           column: -32,
-          row: -32,
+          row: -24,
           left: 30,
           right: 10,
           top: 20,
@@ -46,6 +46,7 @@ export class OrderUI extends Phaser.GameObjects.Container {
     order.main.forEach((item) => {
       const ingredient = scene.add
         .image(0, 0, INGREDIENTS[item.ingredient].sprite)
+        .setTint(INGREDIENTS[item.ingredient].tint[item.status])
         .setDisplaySize(55, 65)
         .setOrigin(0, 0);
       const quality = new QualityIndicator(scene, 0, 0, item.status, true);
@@ -57,6 +58,8 @@ export class OrderUI extends Phaser.GameObjects.Container {
     gridSizer.layout();
 
     this.add(gridSizer);
+
+    this.depth = 10000;
   }
 
   deliveredMain(positiveOutcome: boolean) {
