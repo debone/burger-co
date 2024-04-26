@@ -129,6 +129,7 @@ export class Bezelbub extends Phaser.GameObjects.Container implements Customer {
     if (this.patience <= 0) {
       this.scene.orders.cancelOrder(this.order);
       this.scene.customerQueue.dropCustomer(this.id);
+      this.scene.addDayOrders(false);
 
       this.getFirst().setTint(0xff7777);
 

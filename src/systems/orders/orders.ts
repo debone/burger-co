@@ -38,18 +38,33 @@ export class Orders {
   getRecipe() {
     const availableRecipes = [];
     if (this.scene.day > 2) {
-      if (this.scene.clockTime < this.scene.dayDuration / 2)
+      if (this.scene.clockTime < this.scene.dayDuration / 2) {
         availableRecipes.push(RECIPES["devils-burger"]());
+        availableRecipes.push(RECIPES["devils-burger"]());
+        availableRecipes.push(RECIPES["devils-burger"]());
+        availableRecipes.push(RECIPES["devils-burger"]());
+        availableRecipes.push(RECIPES["devils-burger"]());
+        availableRecipes.push(RECIPES["devils-burger"]());
+      }
+      availableRecipes.push(RECIPES["soul-burger"]());
+      availableRecipes.push(RECIPES["soul-burger"]());
+      availableRecipes.push(RECIPES["soul-burger"]());
       availableRecipes.push(RECIPES["soul-burger"]());
     }
     if (this.scene.day > 1) {
-      if (this.scene.clockTime < this.scene.dayDuration / 2)
+      if (this.scene.clockTime < this.scene.dayDuration / 2) {
         availableRecipes.push(RECIPES["cheese-black-burger"]());
+        availableRecipes.push(RECIPES["cheese-black-burger"]());
+        availableRecipes.push(RECIPES["cheese-black-burger"]());
+      }
+      availableRecipes.push(RECIPES["cheese-burger"]());
       availableRecipes.push(RECIPES["cheese-burger"]());
     }
 
-    if (this.scene.clockTime < this.scene.dayDuration / 2)
+    if (this.scene.clockTime < this.scene.dayDuration / 2) {
       availableRecipes.push(RECIPES["double-burger"]());
+      availableRecipes.push(RECIPES["double-burger"]());
+    }
     availableRecipes.push(RECIPES["basic-burger"]());
 
     return pickRandom(availableRecipes);
@@ -137,6 +152,12 @@ export class Orders {
 
       order.fulfilled = true;
       someOrderFullfilled = true;
+
+      if (inPrecision && inQuality && inTime) {
+        this.scene.addDayOrders(true);
+      } else {
+        this.scene.addDayOrders(false);
+      }
 
       order.container.deliveredMain(inPrecision && inQuality && inTime);
       this.scene.customerQueue.deliveredOrder(

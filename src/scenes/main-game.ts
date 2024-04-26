@@ -149,7 +149,13 @@ export class MainGame extends Scene {
   dayQuality: number = 0;
   dayTiming: number = 0;
 
-  dayDuration: number = 240;
+  dayGoodOrders: number = 0;
+  dayBadOrders: number = 0;
+
+  weekGoodOrders: number = 0;
+  weekBadOrders: number = 0;
+
+  dayDuration: number = 120;
   clockTime: number = this.dayDuration;
   clockTick: Phaser.Time.TimerEvent;
   clockText: Phaser.GameObjects.Text;
@@ -198,6 +204,14 @@ export class MainGame extends Scene {
     }
   }
 
+  addDayOrders(good: boolean) {
+    if (good) {
+      this.dayGoodOrders++;
+    } else {
+      this.dayBadOrders++;
+    }
+  }
+
   addTotalWeekScore(precision: number, quality: number, timing: number) {
     this.weekPrecision += precision / 3;
     this.weekQuality += quality / 3;
@@ -206,7 +220,7 @@ export class MainGame extends Scene {
 
   startDay() {
     this.day++;
-    this.clockTime = this.dayDuration;
+    this.clockTime = this.dayDuration * this.day;
 
     this.dispensers.push(new Dispenser(this, 0, "BOTTOM_BUN"));
     this.dispensers.push(new Dispenser(this, 3, "MEAT_PATTY"));
@@ -277,6 +291,9 @@ export class MainGame extends Scene {
     // Calculate score
     this.addTotalWeekScore(this.dayPrecision, this.dayQuality, this.dayTiming);
 
+    this.weekGoodOrders += this.dayGoodOrders;
+    this.weekBadOrders += this.dayBadOrders;
+
     if (this.day < 3) {
       this.displayDayResults();
     } else {
@@ -286,6 +303,8 @@ export class MainGame extends Scene {
     this.dayPrecision = 0;
     this.dayQuality = 0;
     this.dayTiming = 0;
+    this.dayGoodOrders = 0;
+    this.dayBadOrders = 0;
   }
 
   displayDayResults() {
@@ -443,6 +462,21 @@ export class MainGame extends Scene {
         color: "#d32836",
       })
     );
+    popup.addSpace(0.2);
+    popup.add(
+      this.add.text(
+        0,
+        0,
+        `Full score for ${this.dayGoodOrders} orders out of ${
+          this.dayGoodOrders + this.dayBadOrders
+        }`,
+        {
+          fontFamily: "DotGothic16",
+          fontSize: "24px",
+          color: "#d32836",
+        }
+      )
+    );
     popup.addSpace(0.5);
     popup.add(gridSizer);
     popup.addSpace(0.3);
@@ -454,9 +488,9 @@ export class MainGame extends Scene {
       })
     );
 
-    popup.layout();
+    popup.layout().setDepth(99999);
 
-    this.add.existing(gridSizer);
+    this.add.existing(popup);
 
     this.input.once("pointerup", () => {
       popup.destroy();
@@ -473,7 +507,8 @@ export class MainGame extends Scene {
         GAME_HEIGHT,
         0x000000
       )
-      .setAlpha(0);
+      .setAlpha(0)
+      .setDepth(99990);
 
     this.tweens.add({
       targets: rect,
@@ -665,7 +700,23 @@ export class MainGame extends Scene {
       );
     }
 
-    popup.addSpace(0.3);
+    popup.addSpace(0.4);
+    popup.add(
+      this.add.text(
+        0,
+        0,
+        `Full score for ${this.weekGoodOrders} orders out of ${
+          this.weekGoodOrders + this.weekBadOrders
+        }`,
+        {
+          fontFamily: "DotGothic16",
+          fontSize: "24px",
+          color: "#d32836",
+        }
+      )
+    );
+
+    popup.addSpace(0.4);
     popup.add(gridSizer);
     popup.addSpace(0.5);
     popup.add(
@@ -692,7 +743,7 @@ export class MainGame extends Scene {
       })
     );
 
-    popup.layout();
+    popup.layout().setDepth(99999);
 
     this.add.existing(gridSizer);
   }
